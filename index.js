@@ -4,6 +4,7 @@ const cors = require('cors');
 const {mysqlConnect} = require('./db/db');
 const userRoutes = require('./routes/user.route');
 
+app.get('/', (req, res) => res.send('Hello World!'));
 ///env
 require("dotenv").config();
 
@@ -29,5 +30,4 @@ app.use(cors());
 app.use("/user", userRoutes);
 
 
-app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Unilo app listening on port ${port}!`));
