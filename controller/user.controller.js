@@ -3,7 +3,8 @@ const { sequelize } = require('../db/db');
 const formidable = require('formidable');
 const fs = require('fs');
 const path = require('path');
-const { log } = require('console');
+const mailer = require('../mailer/mailer');
+
 
 const signup = (req, res) => {
     // console.log(req.body);
@@ -13,20 +14,29 @@ const signup = (req, res) => {
                 where: {
                     email: req.body.email
                 },
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result) {
                     res.send("Email already exists!");
                     res.end();
                 } else {
-                    Model.create({
-                        fname: " ",
-                        lname: " ",
-                        phone: req.body.phone || "",
-                        email: req.body.email || "",
-                        imageURL: "",
-                        token: "",
-                    });
-                    res.status(200).send({ res: req.body });
+                    try {
+                        await mailer(req.body.email, "Welcome to Unilo", "This is your OTP 1235");
+                        // Model.create({
+                        //     fname: " ",
+                        //     lname: " ",
+                        //     phone: req.body.phone || "",
+                        //     email: req.body.email || "",
+                        //     imageURL: "",
+                        //     token: "",
+                        // });
+                        res.status(200).send({ res: req.body,  });
+                    } catch (error) {
+                        console.log(error);
+                        res.end("Something went wrong")
+                    }
+
+
+
                 }
             })
         })
@@ -66,24 +76,25 @@ const updateProfile = (req, res) => {
             var oldPath = files.filepath.filepath;
             var filepath = `uploads/${files.filepath.originalFilename}`;
             fs.rename(oldPath, filepath, (err) => {
-                if (!err) {
-                    Model.update({
-                        "fname": fname,
-                        "lname": lname,
-                        "phone": phone,
-                        "imageURL": filepath
-                    }, {
-                        "where": {
-                            email: fields.email
-                        }
-                    }).then(result => {
-                        if (result) {
-                            res.send("Successfully updated");
-                            res.end();
-                        }
-                    })
-                }
-                res.end(err);
+                // if (!err) {
+                Model.update({
+                    "fname": fname,
+                    "lname": lname,
+                    "phone": phone,
+                    "imageURL": filepath
+                }, {
+                    "where": {
+                        email: fields.email
+                    }
+                }).then(result => {
+                    if (result) {
+                        console.log("Successfully updated");
+                        res.send("Successfully updated");
+                        // res.end();
+                    }
+                })
+                // }
+                // res.end(err);
             })
 
         }
