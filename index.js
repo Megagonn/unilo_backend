@@ -41,6 +41,8 @@ sequelize.authenticate().then((res)=>{
 }).catch((err)=>{
     console.log(err);
 });
+
+
 app.get('/', (req, res) => res.send('Hello World!'));
 // mysqlConnect.connect((err) => {
 //     var query = "create database IF NOT EXISTS unilo_db;"
