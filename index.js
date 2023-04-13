@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express();
+const cors = require('cors');
 const {mysqlConnect} = require('./db/db');
 const userRoutes = require('./routes/user.route');
 
@@ -23,7 +24,8 @@ mysqlConnect.connect((err) => {
     })
 })
 
-
+///middlewares
+app.use(cors());
 app.use("/user", userRoutes);
 
 
