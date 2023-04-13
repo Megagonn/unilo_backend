@@ -31,3 +31,5 @@ app.use("/user", userRoutes);
 
 
 app.listen(port, () => console.log(`Unilo app listening on port ${port}!`));
+
+module.exports = app;
