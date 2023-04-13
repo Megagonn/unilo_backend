@@ -17,20 +17,20 @@ require("dotenv").config();
 const port = process.env.PORT || 5860;
 
 app.get('/', (req, res) => res.send('Hello World!'));
-mysqlConnect.connect((err) => {
-    var query = "create database IF NOT EXISTS unilo_db;"
-    if (err) {
-        console.log(err.code, err.message, err.stack);
-        return;
-    }
-    console.log("Connection secured!");
-    mysqlConnect.query(query, (err, result) => {
-        if (err) {
-            console.log(err);;
-        }
-        console.log("DB created!");
-    })
-})
+// mysqlConnect.connect((err) => {
+//     var query = "create database IF NOT EXISTS unilo_db;"
+//     if (err) {
+//         console.log(err.code, err.message, err.stack);
+//         return;
+//     }
+//     console.log("Connection secured!");
+//     mysqlConnect.query(query, (err, result) => {
+//         if (err) {
+//             console.log(err);;
+//         }
+//         console.log("DB created!");
+//     })
+// })
 
 
 
