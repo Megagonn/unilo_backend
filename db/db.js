@@ -1,20 +1,21 @@
 const mysql = require('mysql');
 const {Sequelize} = require('sequelize');
-
+require("dotenv").config();
 const mysqlConnect = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: ""
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
 })
 
 const sequelize = new Sequelize(
-    'unilo_db',
-    'root',
-    '',
+    process.env.DB_NAME,
+    process.env.USER,
+    process.env.PASSWORD,
     {
-        host: 'localhost',
+        host: process.env.HOST,
         dialect: 'mysql'
     }
 );
+
 
 module.exports = {mysqlConnect, sequelize};
