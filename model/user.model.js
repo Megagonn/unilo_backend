@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const {sequelize} = require('../db/db');
+const { sequelize } = require('../db/db');
 
 const UserModel = sequelize.define('user_db', {
     "fname": {
@@ -12,7 +12,7 @@ const UserModel = sequelize.define('user_db', {
     },
     "email": {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false, unique: true,
     },
     "phone": {
         type: DataTypes.STRING,

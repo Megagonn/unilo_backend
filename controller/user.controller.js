@@ -17,7 +17,7 @@ const signup = (req, res) => {
                 },
             }).then(async (result) => {
                 if (result) {
-                    res.send("Email already exists!");
+                    res.send({ status: false, message: "Email already exists!" });
                     res.end();
                 } else {
                     try {
@@ -33,17 +33,18 @@ const signup = (req, res) => {
                             history: "",
                             status: false,
                         }).then((_) => {
-                            res.status(200).send({ res: req.body, });
+                            res.send({ status: true, message: "Registration successful!" });
                         });
                     } catch (error) {
                         console.log(error);
-                        res.end("Something went wrong");
+                        res.end({ status: false, message: "Something went wrong" });
                     }
                 }
             })
         })
     } catch (error) {
         console.log(error);
+        res.send({ status: false, message: error });
     }
 };
 
@@ -51,57 +52,86 @@ const addName = (req, res) => {
     var fname = req.body.fname;
     var lname = req.body.lname;
     try {
-        Model.update({
-            "fname": fname,
-            "lname": lname,
-            "status":true,
-        }, {
-            where: { email: req.body.email }
-        }).then(result => {
-            if (result) {
-                res.status(200).send({ res: result });
-            }
+        sequelize.sync().then(() => {
+            Model.update({
+                "fname": fname,
+                "lname": lname,
+                "status": true,
+            }, {
+                where: { email: req.body.email }
+            }).then(result => {
+                if (result) {
+                    res.status(200).send({ res: result });
+                }
+            });
         });
     } catch (error) {
         res.send(`Something went wrong! \n\n${error.message}`);
     }
 };
 
+const signin = (req, res) => {
+    try {
+        sequelize.sync().then(() => {
+            Model.findOne({
+                where: {
+                    email: req.body.email,
+                    phone: req.body.phone,
+                }
+            }).then((result) => {
+                if (result) {
+                    console.log(result);
+                    res.send({ status: true, message: result });
+                } else {
+                    res.send({ status: false, message: "Not found" });
+                }
+            });
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({ status: false, message: error });
+    }
+};
+
 const updateProfile = (req, res) => {
     // const formi = new Formidable;
-    const formi = new formidable.IncomingForm();
-    formi.parse(req, (err, fields, files) => {
-        // console.log(fields, files);
-        if (!err) {
-            var fname = fields.fname;
-            var lname = fields.lname;
-            var phone = fields.phone;
-            var oldPath = files.filepath.filepath;
-            var filepath = `uploads/${files.filepath.originalFilename}`;
-            fs.rename(oldPath, filepath, (err) => {
-                // if (!err) {
-                Model.update({
-                    "fname": fname,
-                    "lname": lname,
-                    "phone": phone,
-                    "imageURL": filepath
-                }, {
-                    "where": {
-                        email: fields.email
-                    }
-                }).then(result => {
-                    if (result) {
-                        console.log("Successfully updated");
-                        res.send("Successfully updated");
-                        // res.end();
-                    }
+    try {
+        const formi = new formidable.IncomingForm();
+        formi.parse(req, (err, fields, files) => {
+            // console.log(fields, files);
+            if (!err) {
+                var fname = fields.fname;
+                var lname = fields.lname;
+                var phone = fields.phone;
+                var oldPath = files.filepath.filepath;
+                var filepath = `uploads/user/${files.filepath.originalFilename}`;
+                fs.rename(oldPath, filepath, (err) => {
+                    // if (!err) {
+                    Model.update({
+                        "fname": fname,
+                        "lname": lname,
+                        "phone": phone,
+                        "imageURL": filepath
+                    }, {
+                        "where": {
+                            email: fields.email
+                        }
+                    }).then(result => {
+                        if (result) {
+                            console.log("Successfully updated");
+                            res.send("Successfully updated");
+                            // res.end();
+                        }
+                    })
+                    // }
+                    // res.end(err);
                 })
-                // }
-                // res.end(err);
-            })
 
-        }
-    })
+            }
+        })
+    } catch (error) {
+        res.send(error);
+    }
 };
 
 const getall = (_, res) => {
@@ -116,4 +146,4 @@ const getall = (_, res) => {
     }
 };
 
-module.exports = { signup, getall, addName, updateProfile };
+module.exports = { signup, getall, addName, updateProfile, signin };
