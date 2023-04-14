@@ -1,4 +1,5 @@
 const Model = require('../model/user.model');
+// const HistoryModel = require('../model/user_histroy.model');
 const { sequelize } = require('../db/db');
 const formidable = require('formidable');
 const fs = require('fs');
@@ -21,22 +22,23 @@ const signup = (req, res) => {
                 } else {
                     try {
                         await mailer(req.body.email, "Welcome to Unilo", "This is your OTP 1235");
-                        // Model.create({
-                        //     fname: " ",
-                        //     lname: " ",
-                        //     phone: req.body.phone || "",
-                        //     email: req.body.email || "",
-                        //     imageURL: "",
-                        //     token: "",
-                        // });
-                        res.status(200).send({ res: req.body,  });
+                        Model.create({
+                            fname: " ",
+                            lname: " ",
+                            phone: req.body.phone || "",
+                            email: req.body.email || "",
+                            imageURL: " ",
+                            token: " ",
+                            lastOTP: "0000",
+                            history: "",
+                            status: false,
+                        }).then((_) => {
+                            res.status(200).send({ res: req.body, });
+                        });
                     } catch (error) {
                         console.log(error);
-                        res.end("Something went wrong")
+                        res.end("Something went wrong");
                     }
-
-
-
                 }
             })
         })
@@ -52,6 +54,7 @@ const addName = (req, res) => {
         Model.update({
             "fname": fname,
             "lname": lname,
+            "status":true,
         }, {
             where: { email: req.body.email }
         }).then(result => {

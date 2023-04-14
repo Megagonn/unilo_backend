@@ -36,8 +36,8 @@ const port = process.env.PORT || 5860;
 
 
 ///db connection
-sequelize.authenticate().then((res)=>{
-    console.log(res, "DB authentication successful");
+sequelize.authenticate().then((_)=>{
+    console.log("DB authentication successful");
 }).catch((err)=>{
     console.log(err);
 });

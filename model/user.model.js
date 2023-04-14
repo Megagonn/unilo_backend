@@ -26,6 +26,18 @@ const UserModel = sequelize.define('user_db', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    "history": {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    "status": {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+    },
+    "lastOTP": {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 });
 
 module.exports = UserModel;
