@@ -4,6 +4,7 @@ const cors = require('cors');
 const {mysqlConnect, sequelize} = require('./db/db');
 const bodyParser = require('body-parser')
 const userRoutes = require('./routes/user.route');
+const companyRoutes = require('./routes/company.route');
 const Model = require('./model/user.model');
 
 ///middlewares
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 require("dotenv").config();
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/company", companyRoutes);
 const port = process.env.PORT || 5860;
 
 // app.post("api/v1/user", (req, res) => {
