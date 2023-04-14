@@ -1,0 +1,1 @@
+Remove /uploads from .gitignore file before uploading to server.
